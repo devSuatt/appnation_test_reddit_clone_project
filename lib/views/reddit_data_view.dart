@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable, avoid_print
 
-import 'dart:convert';
 import 'package:appnation_test_reddit_clone_project/widgets/down_buttons.dart';
 import 'package:appnation_test_reddit_clone_project/widgets/my_app_bar.dart';
-import 'package:http/http.dart' as http;
 import 'package:appnation_test_reddit_clone_project/models/reddit_data.dart';
 import 'package:appnation_test_reddit_clone_project/services/get_json_datas.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +13,9 @@ class RedditDataView extends StatefulWidget {
   _RedditDataViewState createState() => _RedditDataViewState();
 }
 
-void asd() async {
-  final _response = await http.get(Uri.parse("https://www.reddit.com/r/flutterdev/top.json?count=20"));
-  final _mapJson = json.decode(_response.body);
-  print(_mapJson['data']['children'][1]['data']['name']);
-}
-
 class _RedditDataViewState extends State<RedditDataView> {
   @override
   Widget build(BuildContext context) {
-    asd();
     return Scaffold(
       backgroundColor: Colors.blueGrey[100],
       appBar: myAppBar(),
