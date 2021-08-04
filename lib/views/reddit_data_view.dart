@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable, avoid_print
 
+import 'package:appnation_test_reddit_clone_project/providers/reddit_provider.dart';
 import 'package:appnation_test_reddit_clone_project/widgets/down_buttons.dart';
 import 'package:appnation_test_reddit_clone_project/widgets/my_app_bar.dart';
 import 'package:appnation_test_reddit_clone_project/models/reddit_data.dart';
-import 'package:appnation_test_reddit_clone_project/services/get_json_datas.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class RedditDataView extends StatefulWidget {
@@ -25,54 +26,55 @@ class _RedditDataViewState extends State<RedditDataView> {
     );
   }
 
-  
-
-  Widget get _redditDatasWidget => FutureBuilder<List<RedditData>>(
-        future: GetJsonDatas().getRedditData(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          var data = snapshot.data;
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, int index) {
-                RedditData myData = snapshot.data[index];
-                return Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(5),
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: showScoreOfReddit(myData, index),
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(8, 0, 5, 0),
-                          child: Column(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              showTitleOfReddit(myData, index),
-                              myData.thumbnail != "self" && myData.thumbnail != "default"
-                                  ? Image.network(myData.thumbnail, fit: BoxFit.fill)
-                                  : Text(removeUrlSubStrings(myData.selftext)),
-                              SizedBox(height: 15),
-                              showDownButtons(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          } else {
+  Widget get _redditDatasWidget => ChangeNotifierProvider(
+        create: (context) => RedditProvider(),
+        child: Builder(builder: (context) {
+          final _redditProvider = Provider.of<RedditProvider>(context);
+          if (_redditProvider.pageState == PageState.Loading) {
             return Center(child: CircularProgressIndicator());
           }
-        },
+          if (_redditProvider.pageState == PageState.Error) {
+            return Center(child: Text("An error occured: " + _redditProvider.errorMessage));
+          }
+          final redditDatas = _redditProvider.redditDatas;
+          return ListView.builder(
+            itemCount: redditDatas.length,
+            itemBuilder: (context, int index) {
+              RedditData myData = redditDatas[index];
+              return Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: showScoreOfReddit(myData, index),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(8, 0, 5, 0),
+                        child: Column(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            showTitleOfReddit(myData, index),
+                            myData.thumbnail != "self" && myData.thumbnail != "default"
+                                ? Image.network(myData.thumbnail, fit: BoxFit.fill)
+                                : Text(removeUrlSubStrings(myData.selftext)),
+                            SizedBox(height: 15),
+                            showDownButtons(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }),
       );
 
   Container showTitleOfReddit(RedditData myData, int index) {
