@@ -2,6 +2,7 @@
 
 import 'package:appnation_test_reddit_clone_project/providers/reddit_provider.dart';
 import 'package:appnation_test_reddit_clone_project/shared/down_buttons.dart';
+import 'package:appnation_test_reddit_clone_project/shared/functions.dart';
 import 'package:appnation_test_reddit_clone_project/shared/my_app_bar.dart';
 import 'package:appnation_test_reddit_clone_project/models/reddit_data.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class RedditDataView extends StatefulWidget {
 }
 
 class _RedditDataViewState extends State<RedditDataView> {
+  Functions myFunctions = Functions();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +64,7 @@ class _RedditDataViewState extends State<RedditDataView> {
                             showTitleOfReddit(myData, index),
                             myData.thumbnail != "self" && myData.thumbnail != "default"
                                 ? Image.network(myData.thumbnail, fit: BoxFit.fill)
-                                : Text(removeUrlSubStrings(myData.selftext)),
+                                : Text(myFunctions.removeUrlSubStrings(myData.selftext)),
                             SizedBox(height: 15),
                             showDownButtons(),
                           ],
@@ -82,7 +84,7 @@ class _RedditDataViewState extends State<RedditDataView> {
       margin: EdgeInsets.fromLTRB(0, 12, 0, 12),
       alignment: Alignment.topLeft,
       child: Text(
-        changeAmpersandChar(myData.title),
+        myFunctions.changeAmpersandChar(myData.title),
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
