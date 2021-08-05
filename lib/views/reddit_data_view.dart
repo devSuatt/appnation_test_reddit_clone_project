@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable, avoid_print
 
 import 'package:appnation_test_reddit_clone_project/providers/reddit_provider.dart';
-import 'package:appnation_test_reddit_clone_project/widgets/down_buttons.dart';
-import 'package:appnation_test_reddit_clone_project/widgets/my_app_bar.dart';
+import 'package:appnation_test_reddit_clone_project/shared/down_buttons.dart';
+import 'package:appnation_test_reddit_clone_project/shared/my_app_bar.dart';
 import 'package:appnation_test_reddit_clone_project/models/reddit_data.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
